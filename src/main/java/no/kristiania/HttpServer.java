@@ -1,6 +1,7 @@
 package no.kristiania;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -70,22 +71,7 @@ public class HttpServer {
             }
             respondWithContent(clientSocket, responseText, "text/html; charset=utf-8\n\n");;
 
-        } else if (fileTarget.equals("/api/questions")) {
-            Map<String, String> parameters = HttpMessage.parseQueryParameters(httpMessage.getMessageBody());
 
-            Question questions = new Question();
-
-            questions.setId(parameters.get(0));
-            questions.setQuestionTitle(parameters.get("title"));
-            questions.setQuestionText(parameters.get("text"));
-            questions.setQuestionOptionLowLabel(parameters.get("low_label"));
-            questions.setQuestionOptionHighLabel(parameters.get("high_label"));
-            questionsList.add(questions);
-            String addedQuestionText = "You have added a question";
-
-
-
-            respondWithContent(clientSocket, "Your question is added!" + questions,    "text/html; charset=utf-8\n\n");
         } else if (fileTarget.equals("/api/questionOptions")) {
             String responseText = "";
 
@@ -129,8 +115,10 @@ public class HttpServer {
     }
 
     public static void main(String[] args) throws IOException {
+        DataSource dataSource = createDataSource();
+        QuestionDao questionDao = new QuestionDao(dataSource);
         HttpServer httpServer = new HttpServer(1963);
-        httpServer.setQuestionDao(new QuestionDao(createDataSource()));
+        httpServer.addController("/api/questions", new AddQuestionController(questionDao));
         httpServer.setRoot(Paths.get("."));
 
     }
