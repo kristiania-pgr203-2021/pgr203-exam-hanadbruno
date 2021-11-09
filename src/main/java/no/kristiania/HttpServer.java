@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ public class HttpServer {
     private List<String> listOfQuestions = new ArrayList<>();
     private List<Question> questionsList = new ArrayList<>();
     private QuestionDao questionDao;
+    private HashMap<String, HttpController> controllers = new HashMap<>();
 
     public HttpServer(int serverPort) throws IOException {
         serverSocket = new ServerSocket(serverPort);
@@ -34,10 +36,12 @@ public class HttpServer {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
-    private void handleClient() throws IOException {
+    private void handleClient() throws IOException, SQLException {
         Socket clientSocket = serverSocket.accept();
 
         HttpMessage httpMessage = new HttpMessage(clientSocket);
@@ -52,6 +56,10 @@ public class HttpServer {
             query = requestTarget.substring(questionPos+1);
         } else {
             fileTarget = requestTarget;
+        }if(controllers.containsKey(fileTarget)){
+            HttpMessage response = controllers.get(fileTarget).handle(httpMessage);
+            response.write(clientSocket);
+            return;
         }
 
         if (fileTarget.equals("/api/alternativeAnswers")) {
@@ -63,7 +71,7 @@ public class HttpServer {
             respondWithContent(clientSocket, responseText, "text/html; charset=utf-8\n\n");;
 
         } else if (fileTarget.equals("/api/questions")) {
-            Map<String, String> parameters = parseQueryParameters(httpMessage.getMessageBody());
+            Map<String, String> parameters = HttpMessage.parseQueryParameters(httpMessage.getMessageBody());
 
             Question questions = new Question();
 
@@ -110,17 +118,6 @@ public class HttpServer {
         }
     }
 
-    private Map<String, String> parseQueryParameters(String query) {
-        Map<String, String> queryMap = new HashMap<>();
-        for (String queryParameter : query.split("&")) {
-            int equalsPos = queryParameter.indexOf('=');
-            String parameterName = queryParameter.substring(0, equalsPos);
-            String parameterValue = queryParameter.substring(equalsPos+1);
-            queryMap.put(parameterName, parameterValue);
-        }
-        return queryMap;
-    }
-
     private void respondWithContent(Socket clientSocket, String responseText, String contentType) throws IOException {
         String response = "HTTP/1.1 200 OK\r\n" +
                 "Content-Length: " + responseText.length() + "\r\n" +
@@ -158,4 +155,10 @@ public class HttpServer {
     public void setQuestionDao(QuestionDao questionDao) {
         this.questionDao = questionDao;
     }
+
+    public void addController(String path, HttpController controller){
+        controllers.put(path, controller);
+    }
+
 }
+

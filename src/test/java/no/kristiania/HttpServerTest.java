@@ -3,6 +3,7 @@ package no.kristiania;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,17 +14,22 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldCreateNewQuestion() throws IOException {
-        HttpPostClient postClient = new HttpPostClient("localhost",httpServer.getPort(),"/api/newQuestion",
-                "title=football&text=doyoulikefootball&lowlabel=fromone&highlabel=tofive");
-        assertEquals(404,postClient.getStatusCode());
-        Question question = httpServer.getQuestionsList().get(0);
-        assertEquals("Hamburger", question.getQuestionText());
+    void shouldCreateNewQuestion() throws IOException, SQLException {
+        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        httpServer.addController("/api/newQuestion", new AddQuestionController(questionDao));
+
+        HttpPostClient postClient = new HttpPostClient(
+                "localhost",httpServer.getPort(),
+                "/api/newQuestion",
+                "title=football&text=doyoulikefootball&lowlabel=fromone&highlabel=tofive"
+        );
+        assertEquals(200,postClient.getStatusCode());
+        Question question = questionDao.listAll().get(0);
+        assertEquals("doyoulikefootball", question.getQuestionText());
     }
 
     @Test
     void shouldReturnQuestionsFromServer() {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-        questionDao.save("Football");
+
     }
 }
