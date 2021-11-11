@@ -69,7 +69,7 @@ public class HttpServer {
             {
                 responseText += "<p>" + question.getQuestionTitle() + ", " + "(" + question.getQuestionText() +")</p>";
             }
-            respondWithContent(clientSocket, responseText, "text/html; charset=utf-8\n\n");;
+            respondWithContent(clientSocket, responseText, "text/html; charset=utf-8\r\n");;
 
 
         } else if (fileTarget.equals("/api/questionOptions")) {

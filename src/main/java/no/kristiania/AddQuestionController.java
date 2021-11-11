@@ -22,6 +22,6 @@ public class AddQuestionController implements HttpController {
         questions.setQuestionOptionLowLabel(parameters.get("low_label"));
         questions.setQuestionOptionHighLabel(parameters.get("high_label"));
         questionDao.save(questions);
-        return new HttpMessage("HTTP/1.1 200 OK", "Ww are good");
+        return new HttpMessage("HTTP/1.1 200 OK", "We are good" );
     }
 }
