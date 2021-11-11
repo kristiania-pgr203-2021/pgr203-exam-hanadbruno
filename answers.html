@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href ="style.css" rel ="stylesheet">
+</head>
+<body>
+<h1>See all answers</h1>
+<form method="GET" action="/api/questions">
+    <p id ="user_name">Username : </p>
+    <p id ="text">Answer text : </p>
+    <p id = "answer_alternative">Answer alternative: </p>
+
+</form>
+<script>
+    fetch("/api/newQuestionnaire")
+        .then(function(response) {
+            return response.text();
+        }).then(function(text) {
+        document.getElementById("questions").innerHTML = text;
+    });
+</script>
+</body>
+</html>
