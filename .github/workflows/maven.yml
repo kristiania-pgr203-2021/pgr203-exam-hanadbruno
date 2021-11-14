@@ -5,10 +5,10 @@ name: Build with Maven
 on:
   push:
     branches:
-      - lecture/*
+      - master
   pull_request:
     branches:
-      - lecture/*
+      - master
 
 jobs:
   build:
