@@ -1,29 +1,25 @@
 @startuml
-'https://plantuml.com/class-diagram
 
+actor Browser
+participant HttpServer
+participant controllers
+participant AddPersonController
+participant PersonDao
+database PERSON_DB
 
-class Question {
- id: int Primary key
- title: string
- text: string
- type: labels|options
- labelForHigh?: string
- labelForLow?: string
-}
+Browser -> HttpServer: POST /api/questions
+HttpServer -> controllers: get("/api/questions")
+HttpServer <-- controllers: AddQuestionController
+HttpServer -> AddQuestionController: response = handle(request)
+AddQuestionController -> AddQuestionController: question = new Question()
+AddQuestionController -> AddQuestionController: question.setquestiontext(req.get("questiontext"))\n...
+note left of AddQuestionController: Reads form parameters from request body
+AddPersonController -> QuestionDao: save(question)
+QuestionDao -> question_db: INSERT INTO questions ...
+HttpServer <-- AddQuestionController: OK 200
+HttpServer -> HttpServer: response.write(socket)
+Browser <-- HttpServer: HTTP/1.1 200 OK
 
-class QuestionOption {
-    title: string
-    questionId: int
-}
-
-Question "1" - "*" QuestionOption
-
-class Answer {
-id: String
-Name: String
-Text: String
-Alternative: String
-}
 
 
 @enduml
