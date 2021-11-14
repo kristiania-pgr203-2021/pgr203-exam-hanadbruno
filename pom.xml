@@ -63,7 +63,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>no.kristiania.person.PersonnelServer</Main-Class>
+                            <Main-Class>no.kristiania.HttpServer</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

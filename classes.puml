@@ -18,5 +18,12 @@ class QuestionOption {
 
 Question "1" - "*" QuestionOption
 
+class Answer {
+id: String
+Name: String
+Text: String
+Alternative: String
+}
+
 
 @enduml
