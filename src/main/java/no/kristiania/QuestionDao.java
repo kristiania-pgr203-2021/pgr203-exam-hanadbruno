@@ -4,10 +4,12 @@ import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class QuestionDao {
     private final DataSource dataSource;
@@ -20,17 +22,23 @@ public class QuestionDao {
 
     }
 
+    static DataSource createDataSource() throws IOException {
+            Properties properties = new Properties();
+            try (FileReader reader = new FileReader("pgr203.properties")) {
+                properties.load(reader);
+            }
 
-    public static DataSource createDataSource() throws IOException {
+            PGSimpleDataSource dataSource = new PGSimpleDataSource();
+            dataSource.setUrl(properties.getProperty(
+                    "dataSource.url",
+                    "jdbc:postgresql://localhost:5432/question_db"
+            ));
+            dataSource.setUser(properties.getProperty("dataSource.user", "question_dbuser"));
+            dataSource.setPassword(properties.getProperty("dataSource.password"));
+            Flyway.configure().dataSource(dataSource).load().migrate();
+            return dataSource;
+        }
 
-
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setURL("jdbc:postgresql://localhost:5432/question_db");
-        dataSource.setUser("question_dbuser");
-        dataSource.setPassword("oltorino2006");
-        Flyway.configure().dataSource(dataSource).load().migrate();
-        return dataSource;
-    }
 
     public void save(Question questions) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
