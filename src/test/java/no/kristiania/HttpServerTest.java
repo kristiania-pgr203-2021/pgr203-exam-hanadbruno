@@ -47,20 +47,7 @@ public class HttpServerTest {
              ;
         }
 
-    @Test
-    void name() throws IOException, SQLException {
-        AnswerDao answerDao = new AnswerDao(TestData.testDataSource());
-        httpServer.addController("/api/answersone", new AddAnswerController(answerDao));
 
-        HttpPostClient postClient = new HttpPostClient(
-                "localhost",httpServer.getPort(),
-                "/api/answersone",
-                "title=football&text=doyoulikefootball&lowlabel=fromone&highlabel=tofive"
-        );
-        assertEquals(200,postClient.getStatusCode());
-        Answer answer = answerDao.listAll().get(0);
-        assertEquals("doyoulikefootball", answer.getAnswerText());
-    }
 }
 
 
