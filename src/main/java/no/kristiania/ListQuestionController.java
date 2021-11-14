@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class ListQuestionController implements HttpController {
     private QuestionDao QuestionDao;
-    private Answer answer1;
 
     public ListQuestionController(QuestionDao questionDao) {
         this.QuestionDao = questionDao;
@@ -16,7 +15,6 @@ public class ListQuestionController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException, IOException {
         String response = "";
-        String answer = "<label>Answer text: <input type=\"text\" name=\"text\" /></label>";
 
 
         for(Question question : QuestionDao.listAll()){

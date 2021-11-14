@@ -135,18 +135,6 @@ public class HttpServer {
         this.rootDirectory = rootDirectory;
     }
 
-    public void setListOfQuestions(List<String> listOfQuestions) {
-        this.listOfQuestions = listOfQuestions;
-    }
-
-    public List<Question> getQuestionsList() {
-        return questionsList;
-    }
-
-
-    public void setQuestionDao(QuestionDao questionDao) {
-        this.questionDao = questionDao;
-    }
 
     public void addController(String path, HttpController controller){
         controllers.put(path, controller);
