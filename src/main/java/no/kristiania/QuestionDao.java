@@ -77,25 +77,6 @@ public class QuestionDao {
         return questions;
     }
 
-    public List<Question> listByLastName(String lastName) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from questions where question_text = ?")) {
-
-                statement.setString(1, lastName);
-
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    ArrayList<Question> questions = new ArrayList<>();
-
-
-                    while (resultSet.next()) {
-                        questions.add(mapFromResultSet(resultSet));
-                    }        return questions;
-                }
-            }
-        }
-
-
-    }
 
     public List<Question> listAll() throws SQLException, IOException {
         try (Connection connection = dataSource.getConnection()) {

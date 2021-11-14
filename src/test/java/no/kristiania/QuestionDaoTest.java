@@ -41,17 +41,10 @@ public class QuestionDaoTest {
              .contains(questions.getId(), questions1.getId());
     }
 
-    @Test
-    void shouldCreateNewQuestion() {
-
-    }
-
     public static Question exampleDataTwo() {
         Question questions = new Question();
         questions.setQuestionText(TestData.pickOne("letsgo"));
         questions.setQuestionTitle(TestData.pickOne("Basketball" ));
         return questions;
     }
-
-
 }
