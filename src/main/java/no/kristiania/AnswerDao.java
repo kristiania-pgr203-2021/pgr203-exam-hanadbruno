@@ -11,6 +11,7 @@ import java.util.List;
 
 public class AnswerDao {
     private final DataSource dataSource;
+    private Answer answers;
 
     public AnswerDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -34,10 +35,9 @@ public class AnswerDao {
 
     public void save(Answer answer) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("insert into answers (user_name, answer_text, answer_alternative) values (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                statement.setString(1, answer.getUserName());
-                statement.setString(2, answer.getAnswerText());
-                statement.setString(3, answer.getAnswerAlternative());
+            try (PreparedStatement statement = connection.prepareStatement("insert into answers ( answer_text) values (?)", Statement.RETURN_GENERATED_KEYS)) {
+
+                statement.setString(1, answer.getAnswerText());
 
 
 
@@ -48,9 +48,9 @@ public class AnswerDao {
                     answer.setId(resultSet.getString("id"));
                 }
             }
-        }catch (SQLException throwables){
+        }this.answers = answer;
 
-        }
+
 
     }
 
@@ -72,15 +72,13 @@ public class AnswerDao {
     private Answer mapFromResultSet(ResultSet resultSet) throws SQLException {
         Answer answer = new Answer();
         answer.setId(resultSet.getString("id"));
-        answer.setUserName(resultSet.getString("user_name"));
         answer.setAnswerText(resultSet.getString("answer_text"));
-        answer.setAnswerAlternative(resultSet.getString("answer_alternative"));
         return answer;
     }
 
     public List<Answer> listByUserName(String userName) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from answers where user_name = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers where id = ?")) {
 
                 statement.setString(1, userName);
 
@@ -102,6 +100,22 @@ public class AnswerDao {
         try (Connection connection = dataSource.getConnection()) {
             {
                 try (PreparedStatement statement = connection.prepareStatement("select * from answers")) {
+                    try (ResultSet rs = statement.executeQuery()) {
+                        ArrayList<Answer> result = new ArrayList<>();
+                        while (rs.next()){
+                            result.add(mapFromResultSet(rs));
+                        }
+                        return result;   }
+                }
+            }
+        }
+
+
+    }
+    public List<Answer> innerJoinTables() throws SQLException, IOException {
+        try (Connection connection = dataSource.getConnection()) {
+            {
+                try (PreparedStatement statement = connection.prepareStatement("select * from answers a, questions b where a.id = b.id" )) {
                     try (ResultSet rs = statement.executeQuery()) {
                         ArrayList<Answer> result = new ArrayList<>();
                         while (rs.next()){
