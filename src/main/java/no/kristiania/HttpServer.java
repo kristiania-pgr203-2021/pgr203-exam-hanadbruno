@@ -117,8 +117,12 @@ public class HttpServer {
     public static void main(String[] args) throws IOException {
         DataSource dataSource = createDataSource();
         QuestionDao questionDao = new QuestionDao(dataSource);
-        HttpServer httpServer = new HttpServer(1963);
+        AnswerDao answerDao = new AnswerDao(dataSource);
+        HttpServer httpServer = new HttpServer(1964);
         httpServer.addController("/api/questions", new AddQuestionController(questionDao));
+        httpServer.addController("/api/answers", new ListQuestionController(questionDao));
+        httpServer.addController("/api/answersone", new AddAnswerController(answerDao));
+        //httpServer.addController("/api/answers", new ListAnswerController(answerDao));
         httpServer.setRoot(Paths.get("."));
 
     }

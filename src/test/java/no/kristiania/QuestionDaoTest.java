@@ -14,7 +14,7 @@ public class QuestionDaoTest {
     @Test
     void shouldRetrieveSavedQuestion() throws SQLException {
         Question question = new Question();
-        question.setQuestionText("Th text");
+        question.setQuestionText("doyoulikefootball");
         question.setQuestionTitle("he title");
         dao.save(question);
         assertThat(dao.retrieve(question.getId()))
@@ -45,4 +45,13 @@ public class QuestionDaoTest {
     void shouldCreateNewQuestion() {
 
     }
+
+    public static Question exampleDataTwo() {
+        Question questions = new Question();
+        questions.setQuestionText(TestData.pickOne("letsgo"));
+        questions.setQuestionTitle(TestData.pickOne("Basketball" ));
+        return questions;
+    }
+
+
 }

@@ -17,9 +17,8 @@ public class AddAnswerController implements HttpController {
             Answer answers = new Answer();
 
             answers.setId(parameters.get(0));
-            answers.setUserName(parameters.get("user_name"));
-            answers.setAnswerText(parameters.get("text"));
-            answers.setAnswerAlternative(parameters.get("answer_alternative"));
+            answers.setAnswerText(parameters.get("answer_text"));
+
             answerDao.save(answers);
             return new HttpMessage("HTTP/1.1 200 OK", "We are good" );
         }
