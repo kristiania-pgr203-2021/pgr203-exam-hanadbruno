@@ -44,7 +44,7 @@ public class HttpServerTest {
             assertThat(client.getMessageBody())
                         .contains(question1.getQuestionText() +   question1.getQuestionTitle())
                     .contains(question2.getQuestionText()  + question2.getQuestionTitle())
-            ;
+             ;
         }
 
     @Test
