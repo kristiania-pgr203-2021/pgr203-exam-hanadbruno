@@ -1,1 +1,1 @@
-https://github.com/kristiania-pgr203-2021/pgr203-exam-hanadbruno.git s
+https://github.com/kristiania-pgr203-2021/pgr203-exam-hanadbruno.git 
