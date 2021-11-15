@@ -1,0 +1,6 @@
+# Default ignored files
+target/
+.idea/
+*.iml
+/dependency-reduced-pom.xml
+/pgr203.properties

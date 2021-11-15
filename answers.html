@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href ="style.css" rel ="stylesheet">
+</head>
+<body>
+<h1>See all answers</h1>
+
+<form method="GET" action="/api/answers">
+    <div id ="answers">
+
+    </div>
+
+
+</form>
+<form method="POST" action="/api/answersone">
+    <div id ="answersall">
+    </div>
+    <p> Answer all questions in this box, answer in order</p>
+    <label>Answer text: <input type="text" name="answer_text" /></label>
+    <button>Add</button>
+
+</form>
+<script>
+    fetch("/api/answers")
+        .then(function(response) {
+            return response.text();
+        }).then(function(text) {
+        document.getElementById("answers").innerHTML = text;
+    });
+</script>
+
+</body>
+</html>
